@@ -9,16 +9,17 @@ const chalk = require('chalk');
 
 //~~~~~~~~~~~~< GLOBAL SETTINGS >~~~~~~~~~~~~\\
 
-global.owner = ['6282113821188'] //['628','628'] 2 owner atau lebih
+global.owner = ['6283122563863'] //['628','628'] 2 owner atau lebih
 global.packname = 'Bot WhatsApp'
-global.author = 'Nazedev'
-global.botname = 'Naze Bot'
+global.author = 'Dravin'
+global.botname = 'Dra Bot'
 global.listprefix = ['+','!','.']
 global.listv = ['•','●','■','✿','▲','➩','➢','➣','➤','✦','✧','△','❀','○','□','♤','♡','◇','♧','々','〆']
 global.tempatDB = 'database.json' // Taruh url mongodb di sini jika menggunakan mongodb. Format : 'mongodb+srv://...'
 global.tempatStore = 'baileys_store.json' // Taruh url mongodb di sini jika menggunakan mongodb. Format : 'mongodb+srv://...'
 global.pairing_code = true
 global.number_bot = '' // Kalo pake panel bisa masukin nomer di sini, jika belum ambil session. Format : '628xx'
+global.tumb = ['https://files.catbox.moe/eni0n0.jpg', 'https://files.catbox.moe/jhnss7.jpg', 'https://files.catbox.moe/7o5zhl.jpg', 'https://files.catbox.moe/ntslfg.jpg', 'https://files.catbox.moe/nbpmar.jpg', 'https://files.catbox.moe/6watql.jpg', 'https://files.catbox.moe/c2nj8q.jpg', 'https://files.catbox.moe/v53qq7.jpg', 'https://files.catbox.moe/a6pkjw.jpg']
 
 global.fake = {
 	anonim: 'https://telegra.ph/file/95670d63378f7f4210f03.png',
@@ -29,10 +30,10 @@ global.fake = {
 }
 
 global.my = {
-	yt: 'https://youtube.com/c/Nazedev',
-	gh: 'https://github.com/nazedev',
-	gc: 'https://chat.whatsapp.com/B5qJIwZHm4VEYZJQE6iMwy',
-	ch: '120363250409960161@newsletter',
+	yt: 'https://www.youtube.com/@DRAVINNNN',
+	gh: 'https://github.com/Dravintempest',
+	gc: '-',
+	ch: '120363420634265233@newsletter',
 }
 
 global.limit = {
