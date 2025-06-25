@@ -74,7 +74,7 @@ module.exports = dravin = async (dravin, m, msg, store, groupCache) => {
 		(m.type == 'protocolMessage') ? (m.message.protocolMessage?.editedMessage?.extendedTextMessage?.text || m.message.protocolMessage?.editedMessage?.conversation || m.message.protocolMessage?.editedMessage?.imageMessage?.caption || m.message.protocolMessage?.editedMessage?.videoMessage?.caption || '') : '') || '';
 		const budy = (typeof m.text == 'string' ? m.text : '')
 		const isCreator = isOwner = [botNumber, ...owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender)
-		const cases = db.cases ? db.cases : (db.cases = [...fs.readFileSync('./dravin.js', 'utf-8').matchAll(/case\s+['"]([^'"]+)['"]/g)].map(match => match[1]));
+		const cases = db.cases ? db.cases : (db.cases = [...fs.readFileSync('./naze.js', 'utf-8').matchAll(/case\s+['"]([^'"]+)['"]/g)].map(match => match[1]));
 		const prefix = isCreator ? (/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi.test(body) ? body.match(/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi)[0] : /[\uD800-\uDBFF][\uDC00-\uDFFF]/gi.test(body) ? body.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/gi)[0] : listprefix.find(a => body?.startsWith(a)) || '') : db.set[botNumber].multiprefix ? (/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi.test(body) ? body.match(/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi)[0] : /[\uD800-\uDBFF][\uDC00-\uDFFF]/gi.test(body) ? body.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/gi)[0] : listprefix.find(a => body?.startsWith(a)) || '¿') : listprefix.find(a => body?.startsWith(a)) || '¿'
 		const isCmd = body.startsWith(prefix)
 		const args = body.trim().split(/ +/).slice(1)
@@ -1085,7 +1085,7 @@ module.exports = dravin = async (dravin, m, msg, store, groupCache) => {
 			case 'addcase': {
 				if (!isCreator) return reply(mess.owner)
 				if (!text && !text.startsWith('case')) return reply('Masukkan Casenya!')
-				fs.readFile('dravin.js', 'utf8', (err, data) => {
+				fs.readFile('naze.js', 'utf8', (err, data) => {
 					if (err) {
 						console.error('Terjadi kesalahan saat membaca file:', err);
 						return;
@@ -1093,7 +1093,7 @@ module.exports = dravin = async (dravin, m, msg, store, groupCache) => {
 					const posisi = data.indexOf("case '19rujxl1e':");
 					if (posisi !== -1) {
 						const codeBaru = data.slice(0, posisi) + '\n' + `${text}` + '\n' + data.slice(posisi);
-						fs.writeFile('dravin.js', codeBaru, 'utf8', (err) => {
+						fs.writeFile('naze.js', codeBaru, 'utf8', (err) => {
 							if (err) {
 								reply('Terjadi kesalahan saat menulis file: ', err);
 							} else reply('Case berhasil ditambahkan');
@@ -1107,7 +1107,7 @@ module.exports = dravin = async (dravin, m, msg, store, groupCache) => {
 				if (!text) return reply('Masukkan Nama Casenya!')
 				try {
 					const getCase = (cases) => {
-						return "case"+`'${cases}'`+fs.readFileSync("dravin.js").toString().split('case \''+cases+'\'')[1].split("break")[0]+"break"
+						return "case"+`'${cases}'`+fs.readFileSync("naze.js").toString().split('case \''+cases+'\'')[1].split("break")[0]+"break"
 					}
 					reply(`${getCase(text)}`)
 				} catch (e) {
@@ -1118,14 +1118,14 @@ module.exports = dravin = async (dravin, m, msg, store, groupCache) => {
 			case 'delcase': {
 				if (!isCreator) return reply(mess.owner)
 				if (!text) return reply('Masukkan Nama Casenya!')
-				fs.readFile('dravin.js', 'utf8', (err, data) => {
+				fs.readFile('naze.js', 'utf8', (err, data) => {
 					if (err) {
 						console.error('Terjadi kesalahan saat membaca file:', err);
 						return;
 					}
 					const regex = new RegExp(`case\\s+'${text.toLowerCase()}':[\\s\\S]*?break`, 'g');
 					const modifiedData = data.replace(regex, '');
-					fs.writeFile('dravin.js', modifiedData, 'utf8', (err) => {
+					fs.writeFile('naze.js', modifiedData, 'utf8', (err) => {
 						if (err) {
 							reply('Terjadi kesalahan saat menulis file: ', err);
 						} else reply('Case berhasil dihapus dari file');
@@ -1560,7 +1560,7 @@ module.exports = dravin = async (dravin, m, msg, store, groupCache) => {
 			}
 			break
 			case 'totalfitur': {
-				const total = ((fs.readFileSync('./dravin.js').toString()).match(/case '/g) || []).length
+				const total = ((fs.readFileSync('./naze.js').toString()).match(/case '/g) || []).length
 				reply(`Total Fitur : ${total}`);
 			}
 			break
