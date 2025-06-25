@@ -41,13 +41,13 @@ const { GroupParticipantsUpdate, MessagesUpsert, Solving } = require('./src/mess
 const { isUrl, generateMessageTag, getBuffer, getSizeMedia, fetchJson, sleep } = require('./lib/function');
 
 /*
-	* Create By Naze
-	* Follow https://github.com/nazedev
+	* Create By dravin
+	* Follow https://github.com/dravindev
 	* Whatsapp : https://whatsapp.com/channel/0029VaWOkNm7DAWtkvkJBK43
 */
 
-async function startNazeBot() {
-	const { state, saveCreds } = await useMultiFileAuthState('nazedev');
+async function startdravinBot() {
+	const { state, saveCreds } = await useMultiFileAuthState('dravindev');
 	const { version, isLatest } = await fetchLatestBaileysVersion();
 	const level = pino({ level: 'silent' });
 	
@@ -106,11 +106,11 @@ async function startNazeBot() {
 			return msg?.message || ''
 		}
 		return {
-			conversation: 'Halo Saya Naze Bot'
+			conversation: 'Halo Saya dravin Bot'
 		}
 	}
 	
-	const naze = WAConnection({
+	const dravin = WAConnection({
 		logger: level,
 		getMessage,
 		syncFullHistory: true,
@@ -141,7 +141,7 @@ async function startNazeBot() {
 		},
 	})
 	
-	if (pairingCode && !phoneNumber && !naze.authState.creds.registered) {
+	if (pairingCode && !phoneNumber && !dravin.authState.creds.registered) {
 		async function getPhoneNumber() {
 			phoneNumber = global.number_bot ? global.number_bot : process.env.BOT_NUMBER || await question('Please type your WhatsApp number : ');
 			phoneNumber = phoneNumber.replace(/[^0-9]/g, '')
@@ -153,23 +153,23 @@ async function startNazeBot() {
 		}
 		(async () => {
 			await getPhoneNumber();
-			await exec('rm -rf ./nazedev/*');
+			await exec('rm -rf ./dravindev/*');
 			console.log('Phone number captured. Waiting for Connection...\n' + chalk.blueBright('Estimated time: around 2 ~ 5 minutes'))
 		})()
 	}
 	
-	await Solving(naze, store)
+	await Solving(dravin, store)
 	
-	naze.ev.on('creds.update', saveCreds)
+	dravin.ev.on('creds.update', saveCreds)
 	
-	naze.ev.on('connection.update', async (update) => {
+	dravin.ev.on('connection.update', async (update) => {
 		const { qr, connection, lastDisconnect, isNewLogin, receivedPendingNotifications } = update
-		if (!naze.authState.creds.registered) console.log('Connection: ', connection || false);
-		if ((connection === 'connecting' || !!qr) && pairingCode && phoneNumber && !naze.authState.creds.registered && !pairingStarted) {
+		if (!dravin.authState.creds.registered) console.log('Connection: ', connection || false);
+		if ((connection === 'connecting' || !!qr) && pairingCode && phoneNumber && !dravin.authState.creds.registered && !pairingStarted) {
 			setTimeout(async () => {
 				pairingStarted = true;
 				console.log('Requesting Pairing Code...')
-				let code = await naze.requestPairingCode(phoneNumber);
+				let code = await dravin.requestPairingCode(phoneNumber);
 				console.log(`Your Pairing Code : ${code}`);
 			}, 3000)
 		}
@@ -177,43 +177,43 @@ async function startNazeBot() {
 			const reason = new Boom(lastDisconnect?.error)?.output.statusCode
 			if (reason === DisconnectReason.connectionLost) {
 				console.log('Connection to Server Lost, Attempting to Reconnect...');
-				startNazeBot()
+				startdravinBot()
 			} else if (reason === DisconnectReason.connectionClosed) {
 				console.log('Connection closed, Attempting to Reconnect...');
-				startNazeBot()
+				startdravinBot()
 			} else if (reason === DisconnectReason.restartRequired) {
 				console.log('Restart Required...');
-				startNazeBot()
+				startdravinBot()
 			} else if (reason === DisconnectReason.timedOut) {
 				console.log('Connection Timed Out, Attempting to Reconnect...');
-				startNazeBot()
+				startdravinBot()
 			} else if (reason === DisconnectReason.badSession) {
 				console.log('Delete Session and Scan again...');
-				startNazeBot()
+				startdravinBot()
 			} else if (reason === DisconnectReason.connectionReplaced) {
 				console.log('Close current Session first...');
 			} else if (reason === DisconnectReason.loggedOut) {
 				console.log('Scan again and Run...');
-				exec('rm -rf ./nazedev/*')
+				exec('rm -rf ./dravindev/*')
 				process.exit(1)
 			} else if (reason === DisconnectReason.forbidden) {
 				console.log('Connection Failure, Scan again and Run...');
-				exec('rm -rf ./nazedev/*')
+				exec('rm -rf ./dravindev/*')
 				process.exit(1)
 			} else if (reason === DisconnectReason.multideviceMismatch) {
 				console.log('Scan again...');
-				exec('rm -rf ./nazedev/*')
+				exec('rm -rf ./dravindev/*')
 				process.exit(0)
 			} else {
-				naze.end(`Unknown DisconnectReason : ${reason}|${connection}`)
+				dravin.end(`Unknown DisconnectReason : ${reason}|${connection}`)
 			}
 		}
 		if (connection == 'open') {
-			console.log('Connected to : ' + JSON.stringify(naze.user, null, 2));
-			let botNumber = await naze.decodeJid(naze.user.id);
+			console.log('Connected to : ' + JSON.stringify(dravin.user, null, 2));
+			let botNumber = await dravin.decodeJid(dravin.user.id);
 			if (global.db?.set[botNumber] && !global.db?.set[botNumber]?.join) {
 				if (my.ch.length > 0 && my.ch.includes('@newsletter')) {
-					if (my.ch) await naze.newsletterMsg(my.ch, { type: 'follow' }).catch(e => {})
+					if (my.ch) await dravin.newsletterMsg(my.ch, { type: 'follow' }).catch(e => {})
 					db.set[botNumber].join = true
 				}
 			}
@@ -228,39 +228,39 @@ async function startNazeBot() {
 		if (isNewLogin) console.log(chalk.green('New device login detected...'))
 		if (receivedPendingNotifications == 'true') {
 			console.log('Please wait About 1 Minute...')
-			naze.ev.flush()
+			dravin.ev.flush()
 		}
 	});
 	
-	naze.ev.on('contacts.update', (update) => {
+	dravin.ev.on('contacts.update', (update) => {
 		for (let contact of update) {
-			let id = naze.decodeJid(contact.id)
+			let id = dravin.decodeJid(contact.id)
 			if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
 		}
 	});
 	
-	naze.ev.on('call', async (call) => {
-		let botNumber = await naze.decodeJid(naze.user.id);
+	dravin.ev.on('call', async (call) => {
+		let botNumber = await dravin.decodeJid(dravin.user.id);
 		if (global.db?.set[botNumber]?.anticall) {
 			for (let id of call) {
 				if (id.status === 'offer') {
-					let msg = await naze.sendMessage(id.from, { text: `Saat Ini, Kami Tidak Dapat Menerima Panggilan ${id.isVideo ? 'Video' : 'Suara'}.\nJika @${id.from.split('@')[0]} Memerlukan Bantuan, Silakan Hubungi Owner :)`, mentions: [id.from]});
-					await naze.sendContact(id.from, global.owner, msg);
-					await naze.rejectCall(id.id, id.from)
+					let msg = await dravin.sendMessage(id.from, { text: `Saat Ini, Kami Tidak Dapat Menerima Panggilan ${id.isVideo ? 'Video' : 'Suara'}.\nJika @${id.from.split('@')[0]} Memerlukan Bantuan, Silakan Hubungi Owner :)`, mentions: [id.from]});
+					await dravin.sendContact(id.from, global.owner, msg);
+					await dravin.rejectCall(id.id, id.from)
 				}
 			}
 		}
 	});
 	
-	naze.ev.on('messages.upsert', async (message) => {
-		await MessagesUpsert(naze, message, store, groupCache);
+	dravin.ev.on('messages.upsert', async (message) => {
+		await MessagesUpsert(dravin, message, store, groupCache);
 	});
 	
-	naze.ev.on('group-participants.update', async (update) => {
-		await GroupParticipantsUpdate(naze, update, store, groupCache);
+	dravin.ev.on('group-participants.update', async (update) => {
+		await GroupParticipantsUpdate(dravin, update, store, groupCache);
 	});
 	
-	naze.ev.on('groups.update', (update) => {
+	dravin.ev.on('groups.update', (update) => {
 		for (const n of update) {
 			if (store.groupMetadata[n.id]) {
 				groupCache.set(n.id, n);
@@ -269,19 +269,19 @@ async function startNazeBot() {
 		}
 	});
 	
-	naze.ev.on('presence.update', ({ id, presences: update }) => {
+	dravin.ev.on('presence.update', ({ id, presences: update }) => {
 		store.presences[id] = store.presences?.[id] || {};
 		Object.assign(store.presences[id], update);
 	});
 	
 	setInterval(async () => {
-		if (naze?.user?.id) await naze.sendPresenceUpdate('available', naze.decodeJid(naze.user.id)).catch(e => {})
+		if (dravin?.user?.id) await dravin.sendPresenceUpdate('available', dravin.decodeJid(dravin.user.id)).catch(e => {})
 	}, 10 * 60 * 1000);
 
-	return naze
+	return dravin
 }
 
-startNazeBot()
+startdravinBot()
 
 // Process Exit
 const cleanup = async (signal) => {
